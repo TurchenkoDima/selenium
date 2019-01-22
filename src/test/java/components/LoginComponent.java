@@ -1,9 +1,8 @@
-package selenium.components;
+package components;
 
 import com.google.common.base.Function;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 
@@ -40,6 +39,7 @@ public class LoginComponent {
         passwordInput.clear();
         passwordInput.sendKeys(password);
         logger.info("Entered password.");
+
         loginButton = wait
                 .until((Function<WebDriver, WebElement>) driver -> driver.findElement(By.id("mailbox:submit")));
 

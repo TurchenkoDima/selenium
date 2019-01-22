@@ -1,4 +1,4 @@
-package selenium.pages;
+package pages;
 
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
@@ -8,7 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import selenium.components.LoginComponent;
+import components.LoginComponent;
 
 
 public class MainPage {
@@ -20,23 +20,22 @@ public class MainPage {
 
     final static Logger logger = (Logger) Logger.getLogger(MainPage.class);
 
-    @FindBy(xpath = "//*[@id = 'PH_user-email']")
+    @FindBy(xpath = "//i[@id = 'PH_user-email']")
     private WebElement usernameLabel;
 
     @FindBy(id = "PH_regLink")
     private WebElement regPhraseOnMainPage;
 
-
-    @FindBy(xpath = "//*[@id='b-nav_folders']//span[@class= 'b-nav__item__text b-nav__item__text_unread']")
+    @FindBy(xpath = "//div[@id='b-nav_folders']//span[@class= 'b-nav__item__text b-nav__item__text_unread']")
     private WebElement incomingMessageLabel;
 
     @FindBy(id = "pm-logo__link__pic")
     private WebElement mainLogoImg;
 
-    @FindBy(xpath = "//*[@class = 'b-toolbar__btn__text b-toolbar__btn__text_pad']")
+    @FindBy(xpath = "//span[@class = 'b-toolbar__btn__text b-toolbar__btn__text_pad']")
     private WebElement writeMessageButton;
 
-    @FindBy(xpath = "//*[text()='выход']")
+    @FindBy(xpath = "//a[text()='выход']")
     private WebElement logoutButton;
 
     public MainPage(WebDriver driver) {
@@ -66,7 +65,7 @@ public class MainPage {
     }
 
     public void logout() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[text()='выход']")));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[text()='выход']")));
         driver.get(logoutButton.getAttribute("href"));
         logger.info("Click 'выход' button.");
     }

@@ -1,19 +1,15 @@
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
-import selenium.pages.MainPage;
+import pages.MainPage;
 import util.DriverSingleton;
-
-import java.util.concurrent.TimeUnit;
 
 public class LogoutTest {
     private WebDriver driver;
     private static final String USERNAME = "375445930312vk@mail.ru";
     private static final String PASSWORD = "bk-zhlobin#13";
 
-    public LogoutTest( String typeOfDriver) {
+    public LogoutTest(String typeOfDriver) {
         driver = DriverSingleton.getDriver(typeOfDriver);
     }
 

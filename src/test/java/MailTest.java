@@ -1,7 +1,7 @@
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
-import selenium.pages.MainPage;
+import pages.MainPage;
 import util.DriverSingleton;
 
 import java.io.FileInputStream;
@@ -15,22 +15,11 @@ public class MailTest {
     private WebDriver driver;
 
     @DataProvider(name = "loginData")
-    public Object[][] loginData() throws IOException {
-        Properties properties = new Properties();
-
-        FileInputStream inputStream = new FileInputStream("src/main/resources/config.properties");
-        properties.load(inputStream);
-
-        String browser = properties.getProperty("mailtest.browser");
-        String username = properties.getProperty("mailtest.username");
-        String password = properties.getProperty("mailtest.password");
-
+    public Object[][] loginData(){
         return new Object[][]{
-                {username,password,browser},
-                {"375445930312vk@mail.ru","bk-zhlobin#13","firefox"}
+                {"375445930312vk@mail.ru","bk-zhlobin#13"}
         };
     }
-
 
     /*@BeforeTest
     public void testbefore(){
@@ -46,9 +35,9 @@ public class MailTest {
     }*/
 
     @Test(dataProvider = "loginData")
-    public void oneCanLoginToMail(String username, String password, String typeOfBrowser){
+    public void oneCanLoginToMail(String username, String password){
 
-        driver = DriverSingleton.getDriver(typeOfBrowser);
+        driver = DriverSingleton.getDriver("browser");
 
         long id = Thread.currentThread().getId();
         System.out.println("Test login. Thread id is: " + id);
@@ -69,9 +58,5 @@ public class MailTest {
     public void testafter(){
         long id = Thread.currentThread().getId();
         System.out.println("After login. Thread id is: " + id);
-
-        //driver.quit();
-        //if(util.DriverSingleton.getDriver()!=null)
-            //util.DriverSingleton.closeDriver();
     }
 }
