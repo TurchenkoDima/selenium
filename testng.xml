@@ -2,8 +2,8 @@
 <suite name="Mail" parallel="methods" thread-count="2">
     <test name="mail">
         <classes>
-            <class name="selenium.MailTest"/>
-            <class name="selenium.LogoutTest"/>
+<!--            <class name="MailTest"/>-->
+            <class name="LogoutFactory"/>
         </classes>
     </test>
 </suite>

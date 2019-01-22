@@ -2,13 +2,14 @@ import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 import pages.MainPage;
+import util.DriverManager;
 import util.DriverSingleton;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-@Listeners(SimpleTestListener.class)
+//@Listeners(SimpleTestListener.class)
 
 public class MailTest {
 
@@ -17,7 +18,8 @@ public class MailTest {
     @DataProvider(name = "loginData")
     public Object[][] loginData(){
         return new Object[][]{
-                {"375445930312vk@mail.ru","bk-zhlobin#13"}
+                {"375445930312vk@mail.ru","bk-zhlobin#13","chrome"},
+                {"375445930312vk@mail.ru","bk-zhlobin#13", "firefox"}
         };
     }
 
@@ -35,9 +37,9 @@ public class MailTest {
     }*/
 
     @Test(dataProvider = "loginData")
-    public void oneCanLoginToMail(String username, String password){
+    public void oneCanLoginToMail(String username, String password, String browser){
 
-        driver = DriverSingleton.getDriver("browser");
+        driver = DriverManager.getDriver();
 
         long id = Thread.currentThread().getId();
         System.out.println("Test login. Thread id is: " + id);

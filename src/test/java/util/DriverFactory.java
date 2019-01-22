@@ -12,17 +12,25 @@ import java.util.concurrent.TimeUnit;
 public class DriverFactory {
 
     public static WebDriver createDriver( String type){
+        Properties properties = new Properties();
+
+        try {
+            FileInputStream inputStream = new FileInputStream("src/main/resources/config.properties");
+            properties.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         WebDriver driver;
 
         if(type.equals("chrome")){
-            System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver");
+            System.setProperty(properties.getProperty("chrome.key"), properties.getProperty("chrome.path"));
             driver = new ChromeDriver();
             //chrome opts
             return manageDriver(driver);
         }
         if(type.equals("firefox")){
-            System.setProperty("webdriver.gecko.driver", "src/main/resources/geckodriver");
+            System.setProperty(properties.getProperty("firefox.key"), properties.getProperty("firefox.path"));
             driver = new FirefoxDriver();
             return manageDriver(driver);
         }
@@ -34,6 +42,7 @@ public class DriverFactory {
         driver.manage().window().maximize();
         driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        DriverManager.setDriver(driver);
         return driver;
     }
 }

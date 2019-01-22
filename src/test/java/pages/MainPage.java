@@ -73,7 +73,7 @@ public class MainPage {
     public boolean isLogout(){
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("PH_regLink")));
         logger.info("Check 'Регистрация' label");
-        return !regPhraseOnMainPage.getText().equals(logoutPhraseOnMainPage);
+        return regPhraseOnMainPage.getText().equals(logoutPhraseOnMainPage);
     }
 
     public void enterCredential(String username, String password){
