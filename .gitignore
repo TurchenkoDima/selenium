@@ -3,3 +3,4 @@ target/
 src/main/resources/chromedriver
 src/main/resources/geckodriver
 *.iml
+*.log

@@ -39,7 +39,7 @@ public class MainPage {
     private WebElement logoutButton;
 
     public MainPage(WebDriver driver) {
-        this.driver=driver;
+        this.driver = driver;
         wait = new WebDriverWait(driver, 120);
         PageFactory.initElements(driver, this);
     }
@@ -49,35 +49,34 @@ public class MainPage {
         logger.info("Opened " + BASE_URL + ".");
     }
 
-    public boolean isLoginedWithUser(String username){
+    public boolean isLoginedWithUser(String username) {
         wait.until(ExpectedConditions.elementToBeClickable(writeMessageButton));
         logger.info("Check username label.");
         return usernameLabel.getText().equals(username);
     }
 
-    public boolean isLogined(){
+    public boolean isLogined() {
         wait.until(ExpectedConditions.elementToBeClickable(writeMessageButton));
         logger.info("Check 'Входящие' button.");
-        if(!incomingMessageLabel.isDisplayed())
+        if (!incomingMessageLabel.isDisplayed())
             return false;
         logger.info("Check 'Написать письмо' button.");
         return writeMessageButton.isDisplayed();
     }
 
     public void logout() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[text()='выход']")));
-        driver.get(logoutButton.getAttribute("href"));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='выход']"))).click();
         logger.info("Click 'выход' button.");
     }
 
-    public boolean isLogout(){
+    public boolean isLogout() {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("PH_regLink")));
         logger.info("Check 'Регистрация' label");
         return regPhraseOnMainPage.getText().equals(logoutPhraseOnMainPage);
     }
 
-    public void enterCredential(String username, String password){
+    public void enterCredential(String username, String password) {
         LoginComponent loginComponent = new LoginComponent(driver);
-        loginComponent.enterCredential(username,password);
+        loginComponent.enterCredential(username, password);
     }
 }

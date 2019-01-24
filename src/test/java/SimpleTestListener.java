@@ -2,7 +2,6 @@ import org.apache.log4j.Logger;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
-import util.DriverFactory;
 import util.DriverManager;
 
 public class SimpleTestListener implements ITestListener {
@@ -13,7 +12,8 @@ public class SimpleTestListener implements ITestListener {
 
     @Override
     public void onTestStart(ITestResult iTestResult) {
-//        DriverFactory.createDriver((String) iTestResult.getParameters()[2]);
+        //DriverFactory.createDriver();
+        //DriverManager.setDriver(DriverFactory.createDriver());
     }
 
     @Override
@@ -23,7 +23,7 @@ public class SimpleTestListener implements ITestListener {
 
     @Override
     public void onTestFailure(ITestResult iTestResult) {
-        System.out.println("The name of the testcase failed is :"+iTestResult.getName());
+        System.out.println("The name of the testcase failed is :" + iTestResult.getName());
     }
 
     @Override
@@ -43,6 +43,6 @@ public class SimpleTestListener implements ITestListener {
 
     @Override
     public void onFinish(ITestContext iTestContext) {
- //       DriverManager.getDriver().quit();
+        //DriverManager.getDriver().quit();
     }
 }

@@ -2,10 +2,6 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import pages.MainPage;
-import util.DriverFactory;
-import util.DriverManager;
-import util.DriverSingleton;
-
 
 @Listeners(SimpleTestListener.class)
 public class LogoutTest {
@@ -13,16 +9,14 @@ public class LogoutTest {
     private static final String USERNAME = "375445930312vk@mail.ru";
     private static final String PASSWORD = "bk-zhlobin#13";
 
-    public LogoutTest(String typeOfDriver) {
-        DriverFactory.createDriver(typeOfDriver);
+    public LogoutTest(WebDriver driver) {
+        this.driver = driver;
     }
 
     @BeforeMethod()
     public void testbefore() {
         long id = Thread.currentThread().getId();
         System.out.println("Before logout. Thread id is: " + id);
-
-        driver = DriverManager.getDriver();
 
         MainPage mainPage = new MainPage(driver);
         mainPage.open();
@@ -44,6 +38,6 @@ public class LogoutTest {
         long id = Thread.currentThread().getId();
         System.out.println("After logout. Thread id is: " + id);
 
-        DriverManager.getDriver().quit();
+        driver.quit();
     }
 }

@@ -28,7 +28,7 @@ public class LoginComponent {
                 .ignoring(NoSuchElementException.class);
     }
 
-    public void  enterCredential (String username, String password){
+    public void enterCredential(String username, String password) {
         passwordInput = wait
                 .until((Function<WebDriver, WebElement>) driver -> driver.findElement(By.id("mailbox:password")));
         usernameInput = wait
