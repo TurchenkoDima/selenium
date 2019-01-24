@@ -9,7 +9,6 @@ import java.util.Map;
 public class DriverManager {
 
     private static final ThreadLocal<WebDriver> threadLocalScope = new ThreadLocal<>();
-    final static Logger logger = (Logger) Logger.getLogger(LoginComponent.class);
 
     public final static WebDriver getDriver() {
         return threadLocalScope.get();

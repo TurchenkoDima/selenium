@@ -14,7 +14,7 @@ public class LoginComponent {
     private WebElement usernameInput;
     private WebElement loginButton;
 
-    final static Logger logger = (Logger) Logger.getLogger(LoginComponent.class);
+    final static Logger logger = Logger.getLogger(LoginComponent.class);
 
     private WebDriver driver;
     private Wait<WebDriver> wait;

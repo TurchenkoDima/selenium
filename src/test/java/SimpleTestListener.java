@@ -6,7 +6,7 @@ import util.DriverManager;
 
 public class SimpleTestListener implements ITestListener {
 
-    final static Logger logger = (Logger) Logger.getLogger(SimpleTestListener.class);
+    final static Logger logger = Logger.getLogger(SimpleTestListener.class);
     private long time;
 
 

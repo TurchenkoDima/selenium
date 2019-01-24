@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -13,20 +14,22 @@ import org.openqa.selenium.support.ui.Wait;
 
 import java.util.concurrent.TimeUnit;
 
-public class HeaderComponent {
-
+public class FooterComponent {
     final static Logger logger = Logger.getLogger(LoginComponent.class);
 
     private WebDriver driver;
     private Wait<WebDriver> wait;
 
-    @FindBy(xpath = "//a[@class = 'x-ph__link x-ph__link_first']")
+    @FindBy(xpath = "//span[@class = 'portal-footer__link__text']")
     private WebElement mailRuLabel;
 
-    @FindBy(xpath = "//span[@class = 'x-ph__link__text x-ph__link_selected']")
-    private WebElement postLabel;
+    @FindBy(xpath = "//span[text() = 'Блог Почты']")
+    private WebElement blogPostLabel;
 
-    public HeaderComponent(WebDriver driver) {
+
+
+
+    public FooterComponent(WebDriver driver) {
         this.driver = driver;
         wait = new FluentWait<WebDriver>(driver)
                 .withTimeout(10, TimeUnit.SECONDS)
@@ -35,11 +38,10 @@ public class HeaderComponent {
         PageFactory.initElements(this.driver, this);
     }
 
-    public boolean isTrueHeaderAfterLogin() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("portal-headline")));
-        logger.info("Check Header after login");
-        String s = postLabel.getText();
-        return ((mailRuLabel.isDisplayed() && mailRuLabel.getText().equals("Mail.Ru"))
-                && (postLabel.isDisplayed() && postLabel.getText().equals("Почта")));
+    public boolean isTrueFooterAfterLogin(){
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class = 'portal-footer__portal-links']")));
+        Actions action = new Actions(driver);
+        action.moveToElement(mailRuLabel);
+        return mailRuLabel.isDisplayed() && mailRuLabel.getText().equals("Mail.Ru") && blogPostLabel.isDisplayed();
     }
 }

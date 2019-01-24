@@ -3,6 +3,7 @@ package util;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.io.FileInputStream;
@@ -12,23 +13,27 @@ import java.util.concurrent.TimeUnit;
 
 public class DriverFactory {
 
-    final static Logger logger = (Logger) Logger.getLogger(DriverFactory.class);
+    final static Logger logger = Logger.getLogger(DriverFactory.class);
 
-    public static WebDriver createDriver(BrowserType type) {
+    public static WebDriver createDriver(BrowserType type) throws Exception {
         WebDriver driver;
         setDriverPath();
-        if (type == BrowserType.CHROME) {
-            driver = new ChromeDriver();
-            //chrome opts
-            logger.info("Created driver with Chrome type of browser");
-            return setDriverDefaults(driver);
+        switch (type) {
+            case CHROME:
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--disable-infobars");//Prevent infobars from appearing.
+                options.addArguments("--disable-boot-animation");//Disables wallpaper boot animation
+                driver = new ChromeDriver(options);
+                logger.info("Created driver with Chrome type of browser");
+                break;
+            case FIREFOX:
+                driver = new FirefoxDriver();
+                logger.info("Created driver with Firefox type of browser");
+                break;
+            default:
+                throw new Exception("Browser type is incorrect. This type of browser is not supported.");
         }
-        if (type == BrowserType.FIREFOX) {
-            driver = new FirefoxDriver();
-            logger.info("Created driver with Firefox type of browser");
-            return setDriverDefaults(driver);
-        }
-        return null;
+        return setDriverDefaults(driver);
     }
 
     private static WebDriver setDriverDefaults(WebDriver driver) {
@@ -48,8 +53,8 @@ public class DriverFactory {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.setProperty(properties.getProperty("chrome.key"), properties.getProperty("chrome.path"));
-        System.setProperty(properties.getProperty("firefox.key"), properties.getProperty("firefox.path"));
+        System.setProperty("webdriver.chrome.driver", properties.getProperty("chrome.path"));
+        System.setProperty("webdriver.gecko.driver", properties.getProperty("firefox.path"));
         logger.info("Set path for browsers");
     }
 }

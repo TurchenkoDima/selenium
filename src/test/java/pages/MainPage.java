@@ -1,5 +1,7 @@
 package pages;
 
+import components.FooterComponent;
+import components.HeaderComponent;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -18,7 +20,7 @@ public class MainPage {
     private static final String logoutPhraseOnMainPage = "Регистрация";
     private final String BASE_URL = "https://mail.ru/";
 
-    final static Logger logger = (Logger) Logger.getLogger(MainPage.class);
+    final static Logger logger = Logger.getLogger(MainPage.class);
 
     @FindBy(xpath = "//i[@id = 'PH_user-email']")
     private WebElement usernameLabel;
@@ -37,6 +39,18 @@ public class MainPage {
 
     @FindBy(xpath = "//a[text()='выход']")
     private WebElement logoutButton;
+
+    @FindBy(xpath = "//textarea[@class = 'js-input compose__labels__input']")
+    private WebElement addressTextarea;
+
+    @FindBy(xpath = "//input[@name = 'Subject']")
+    private WebElement subjectInput;
+
+    @FindBy(xpath = "//body[@id = 'tinymce']")
+    private WebElement bodyBody;
+
+    @FindBy(xpath = "//div[@class = 'b-toolbar__btn b-toolbar__btn_ b-toolbar__btn_false js-shortcut']")
+    private WebElement sendMessageButton;
 
     public MainPage(WebDriver driver) {
         this.driver = driver;
@@ -78,5 +92,22 @@ public class MainPage {
     public void enterCredential(String username, String password) {
         LoginComponent loginComponent = new LoginComponent(driver);
         loginComponent.enterCredential(username, password);
+    }
+
+    public boolean isTrueHeaderAndFooterAfterLogin() {
+        HeaderComponent headerComponent = new HeaderComponent(driver);
+        FooterComponent footerComponent = new FooterComponent(driver);
+        return headerComponent.isTrueHeaderAfterLogin() && footerComponent.isTrueFooterAfterLogin();
+    }
+
+    public void writeNewMessageAndSend(String address, String subject, String body){
+        wait.until(ExpectedConditions.elementToBeClickable(writeMessageButton)).click();
+        addressTextarea.clear();
+        addressTextarea.sendKeys(address);
+        subjectInput.clear();
+        subjectInput.sendKeys(subject);
+        //bodyBody.clear();
+        bodyBody.sendKeys(body);
+        sendMessageButton.click();
     }
 }
