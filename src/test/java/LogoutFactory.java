@@ -9,7 +9,7 @@ public class LogoutFactory {
                 //new LogoutTest(DriverFactory.createDriver(BrowserType.FIREFOX)),
                 //new MailTest(DriverFactory.createDriver(BrowserType.FIREFOX)),
                 //new MailTest(DriverFactory.createDriver(BrowserType.CHROME)),
-                //new ScenarioTest(DriverFactory.createDriver(BrowserType.CHROME)),
+                new ScenarioTest(DriverFactory.createDriver(BrowserType.CHROME)),
                 new ScenarioTest(DriverFactory.createDriver(BrowserType.FIREFOX))};
     }
 }

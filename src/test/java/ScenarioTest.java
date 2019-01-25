@@ -1,8 +1,6 @@
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 import pages.MainPage;
 import util.DriverManager;
@@ -18,7 +16,8 @@ public class ScenarioTest {
     @DataProvider(name = "data")
     public Object[][] scenarioData() {
         return new Object[][]{
-                {"375445930312vk@mail.ru", "bk-zhlobin#13", "test", "\"test\""}
+                {"375445930312vk@mail.ru", "bk-zhlobin#13", "subject" + Math.floor((Math.random() * 100) + 1),
+                        "body" + Math.floor((Math.random() * 100) + 1)}
         };
     }
 
@@ -29,13 +28,23 @@ public class ScenarioTest {
 
         mainPage.open();
         mainPage.enterCredential(username, password);
-
-        asert.assertTrue(mainPage.isLogined());
-        asert.assertTrue(mainPage.isTrueHeaderAndFooterAfterLogin());
-
-        mainPage.writeNewMessageAndSend(username, subject, body);
-
+        asert.assertTrue(mainPage.isLogined(), "1");
+        asert.assertTrue(mainPage.isTrueHeaderAndFooterAfterLogin(), "2");
+        mainPage.writeNewMessageAndSave(username, subject, body);
+        asert.assertTrue(mainPage.isDraftMessage(username, subject, body), "3");
+        mainPage.sendDraftMessage();
+        mainPage.clickDraftButton();
+        asert.assertFalse(mainPage.isDraftMessage(username, subject, body), "4");
+        mainPage.clickSentButton();
+        asert.assertTrue(mainPage.isSentMessage(username, subject, body), "5");
+        mainPage.logout();
+        asert.assertTrue(mainPage.isLogout(), "6");
 
         asert.assertAll();
+    }
+
+    @AfterMethod
+    public void afterMethod() {
+        driver.quit();
     }
 }

@@ -27,8 +27,6 @@ public class FooterComponent {
     private WebElement blogPostLabel;
 
 
-
-
     public FooterComponent(WebDriver driver) {
         this.driver = driver;
         wait = new FluentWait<WebDriver>(driver)
@@ -38,10 +36,11 @@ public class FooterComponent {
         PageFactory.initElements(this.driver, this);
     }
 
-    public boolean isTrueFooterAfterLogin(){
+    public boolean isTrueFooterAfterLogin() {
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class = 'portal-footer__portal-links']")));
         Actions action = new Actions(driver);
         action.moveToElement(mailRuLabel);
+        logger.info("Check footer on main page after login.");
         return mailRuLabel.isDisplayed() && mailRuLabel.getText().equals("Mail.Ru") && blogPostLabel.isDisplayed();
     }
 }

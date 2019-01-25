@@ -3,14 +3,18 @@ package pages;
 import components.FooterComponent;
 import components.HeaderComponent;
 import org.apache.log4j.Logger;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import components.LoginComponent;
+
+import java.util.List;
 
 
 public class MainPage {
@@ -46,11 +50,60 @@ public class MainPage {
     @FindBy(xpath = "//input[@name = 'Subject']")
     private WebElement subjectInput;
 
-    @FindBy(xpath = "//body[@id = 'tinymce']")
-    private WebElement bodyBody;
+    @FindBy(xpath = "//td[@class = 'mceIframeContainer mceFirst mceLast']")
+    private WebElement bodyTd;
 
-    @FindBy(xpath = "//div[@class = 'b-toolbar__btn b-toolbar__btn_ b-toolbar__btn_false js-shortcut']")
+    @FindBy(xpath = "//span[text()='Отправить']")
     private WebElement sendMessageButton;
+
+    @FindBy(xpath = "//span[text()='Сохранить']")
+    private WebElement saveMessageButton;
+
+    @FindBy(xpath = "//span[text()='Черновики']")
+    private WebElement draftButton;
+
+    @FindBy(xpath = "//td[@class = 'compose__control']")
+    private WebElement elementToMoveToWriteBodyMessage;
+
+    @FindBy(xpath = "//div[@class='b-datalist b-datalist_letters b-datalist_letters_to']" +
+            "//div[@class = 'b-datalist__body']/div[@data-bem = 'b-datalist__item']")
+    private List<WebElement> draftMessageList;
+
+    @FindBy(xpath = "//div[@class='b-datalist b-datalist_letters b-datalist_letters_to']" +
+            "//div[@class = 'b-datalist__item__subj']/span")
+    private WebElement bodyLabelDraftPart;
+
+    @FindBy(xpath = "//div[@class='b-datalist b-datalist_letters b-datalist_letters_to']" +
+            "//div[@class = 'b-datalist__item__subj']")
+    private WebElement subjectLabelDraftPart;
+
+    @FindBy(xpath = "//div[@class='b-datalist b-datalist_letters b-datalist_letters_to']" +
+            "//div[@class = 'b-datalist__item__addr']")
+    private WebElement addressLabelDraftPart;
+
+    @FindBy(xpath = "//span[text()='Отправленные']")
+    private WebElement sentButton;
+
+    @FindBy(xpath = "//div[@id='b-letters']/div/div[position()=8]//div[@class='b-datalist__item__subj']")
+    private WebElement subjectLabelSentPart;
+
+    @FindBy(xpath = "//div[@id='b-letters']/div/div[position()=8]//span[@class='b-datalist__item__subj__snippet']")
+    private WebElement bodyLabelSentPart;
+
+    @FindBy(xpath = "//div[@id='b-letters']/div/div[position()=8]//div[@class='b-datalist__item__addr']")
+    private WebElement addressLabelSentPart;
+
+    @FindBy(xpath = "//div[@id='b-letters']/div/div[position()=8]//div[@class='b-datalist__body']/div")
+    private List<WebElement> sentMessageList;
+
+    @FindBy(xpath = "//a[@class='toolbar__message_info__link']")
+    private WebElement linkToDraftInWriteProcess;
+
+    @FindBy(xpath = "//body[@id='tinymce']")
+    private WebElement bodyField;
+
+    @FindBy(xpath = "//iframe[@title='{#aria.rich_text_area}']")
+    private WebElement frameToWriteBodyMessage;
 
     public MainPage(WebDriver driver) {
         this.driver = driver;
@@ -85,7 +138,7 @@ public class MainPage {
 
     public boolean isLogout() {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("PH_regLink")));
-        logger.info("Check 'Регистрация' label");
+        logger.info("Check 'Регистрация' label to logout.");
         return regPhraseOnMainPage.getText().equals(logoutPhraseOnMainPage);
     }
 
@@ -100,14 +153,58 @@ public class MainPage {
         return headerComponent.isTrueHeaderAfterLogin() && footerComponent.isTrueFooterAfterLogin();
     }
 
-    public void writeNewMessageAndSend(String address, String subject, String body){
+    public void writeNewMessageAndSave(String address, String subject, String body) {
         wait.until(ExpectedConditions.elementToBeClickable(writeMessageButton)).click();
         addressTextarea.clear();
         addressTextarea.sendKeys(address);
+        logger.info("Enter address in field.");
         subjectInput.clear();
         subjectInput.sendKeys(subject);
-        //bodyBody.clear();
-        bodyBody.sendKeys(body);
+        logger.info("Enter subject in field.");
+        driver.switchTo().frame(frameToWriteBodyMessage);
+        bodyField.sendKeys(body);
+        driver.switchTo().defaultContent();
+        logger.info("Enter body text in field.");
+        saveMessageButton.click();
+        logger.info("Click 'Сохранить' button.");
+        linkToDraftInWriteProcess.click();
+        logger.info("Click 'Черновик' button.");
+    }
+
+    public void clickDraftButton() {
+        wait.until(ExpectedConditions.elementToBeClickable(draftButton));
+        draftButton.click();
+        logger.info("Click 'Черновик' button.");
+
+    }
+
+    public boolean isDraftMessage(String address, String subject, String body) {
+        logger.info("Check message in draft part.");
+//        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Удалить']")));
+        return !draftMessageList.isEmpty() && bodyLabelDraftPart.getText().contains(body)
+                && subjectLabelDraftPart.getText().replace(bodyLabelDraftPart.getText(), "").equals(subject)
+                && addressLabelDraftPart.getText().equals(address);
+    }
+
+    public void sendDraftMessage() {
+        draftMessageList.get(0).click();
+
+        logger.info("Click last draft message.");
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='Отправить']")));
         sendMessageButton.click();
+        logger.info("Click 'Отправить' button.");
+    }
+
+    public void clickSentButton() {
+        wait.until(ExpectedConditions.elementToBeClickable(sentButton));
+        sentButton.click();
+        logger.info("Click 'Отправленные' button.");
+    }
+
+    public boolean isSentMessage(String address, String subject, String body) {
+        logger.info("Check message in sent part.");
+        return bodyLabelSentPart.getText().contains(body)
+                && subjectLabelSentPart.getText().replace(bodyLabelSentPart.getText(), "").equals(subject)
+                && addressLabelSentPart.getText().equals(address);
     }
 }

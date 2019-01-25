@@ -39,16 +39,10 @@ public class LoginComponent {
         passwordInput.clear();
         passwordInput.sendKeys(password);
         logger.info("Entered password.");
-
         loginButton = wait
                 .until((Function<WebDriver, WebElement>) driver -> driver.findElement(By.id("mailbox:submit")));
-
-        //Actions actions = new Actions(driver);
-        //actions.moveToElement(loginButton).click().perform();
-
         JavascriptExecutor executor = (JavascriptExecutor) driver;
         executor.executeScript("arguments[0].click();", loginButton);
-
         logger.info("Click button 'Войти'.");
     }
 }
