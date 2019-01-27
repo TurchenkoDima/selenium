@@ -1,9 +1,7 @@
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 import pages.MainPage;
-import util.DriverManager;
 
 @Listeners(SimpleTestListener.class)
 public class ScenarioTest {
@@ -16,8 +14,7 @@ public class ScenarioTest {
     @DataProvider(name = "data")
     public Object[][] scenarioData() {
         return new Object[][]{
-                {"375445930312vk@mail.ru", "bk-zhlobin#13", "subject" + Math.floor((Math.random() * 100) + 1),
-                        "body" + Math.floor((Math.random() * 100) + 1)}
+                {"375445930312vk@mail.ru", "bk-zhlobin#13", "subject" + getRandomNumber(), "body" + getRandomNumber()}
         };
     }
 
@@ -28,17 +25,17 @@ public class ScenarioTest {
 
         mainPage.open();
         mainPage.enterCredential(username, password);
-        asert.assertTrue(mainPage.isLogined(), "1");
-        asert.assertTrue(mainPage.isTrueHeaderAndFooterAfterLogin(), "2");
+        asert.assertTrue(mainPage.isLogined(), "Can't login.");
+        asert.assertTrue(mainPage.isTrueHeaderAndFooterAfterLogin(), "Footer and Header are wrong.");
         mainPage.writeNewMessageAndSave(username, subject, body);
-        asert.assertTrue(mainPage.isDraftMessage(username, subject, body), "3");
-        mainPage.sendDraftMessage();
+        asert.assertTrue(mainPage.isDraftMessage(username, subject, body), "Message isn't displayed in Draft.");
+        mainPage.sendDraftMessage(username, subject, body);
         mainPage.clickDraftButton();
-        asert.assertFalse(mainPage.isDraftMessage(username, subject, body), "4");
+        asert.assertFalse(mainPage.isDraftMessage(username, subject, body), "Message is displayed in Draft after sent.");
         mainPage.clickSentButton();
-        asert.assertTrue(mainPage.isSentMessage(username, subject, body), "5");
+        asert.assertTrue(mainPage.isSentMessage(username, subject, body), "Message isn't displayed in Sent after sent.");
         mainPage.logout();
-        asert.assertTrue(mainPage.isLogout(), "6");
+        asert.assertTrue(mainPage.isLogout(), "Can't logout.");
 
         asert.assertAll();
     }
@@ -46,5 +43,9 @@ public class ScenarioTest {
     @AfterMethod
     public void afterMethod() {
         driver.quit();
+    }
+
+    private static double getRandomNumber(){
+        return Math.floor((Math.random() * 100) + 1);
     }
 }

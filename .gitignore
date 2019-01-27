@@ -2,5 +2,7 @@ target/
 .idea/
 src/main/resources/chromedriver
 src/main/resources/geckodriver
+src/main/resources/chromedriver.exe
+src/main/resources/geckodriver.exe
 *.iml
 *.log

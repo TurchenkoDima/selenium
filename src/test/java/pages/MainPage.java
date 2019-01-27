@@ -65,33 +65,32 @@ public class MainPage {
     @FindBy(xpath = "//td[@class = 'compose__control']")
     private WebElement elementToMoveToWriteBodyMessage;
 
-    @FindBy(xpath = "//div[@class='b-datalist b-datalist_letters b-datalist_letters_to']" +
-            "//div[@class = 'b-datalist__body']/div[@data-bem = 'b-datalist__item']")
+    @FindBy(xpath = "//div[@class='b-datalist b-datalist_letters b-datalist_letters_to']//div[@data-bem='b-datalist__item']")
     private List<WebElement> draftMessageList;
 
     @FindBy(xpath = "//div[@class='b-datalist b-datalist_letters b-datalist_letters_to']" +
             "//div[@class = 'b-datalist__item__subj']/span")
-    private WebElement bodyLabelDraftPart;
+    private List<WebElement> bodyLabelDraftPartList;
 
     @FindBy(xpath = "//div[@class='b-datalist b-datalist_letters b-datalist_letters_to']" +
             "//div[@class = 'b-datalist__item__subj']")
-    private WebElement subjectLabelDraftPart;
+    private List<WebElement> subjectLabelDraftPartList;
 
     @FindBy(xpath = "//div[@class='b-datalist b-datalist_letters b-datalist_letters_to']" +
             "//div[@class = 'b-datalist__item__addr']")
-    private WebElement addressLabelDraftPart;
+    private List<WebElement> addressLabelDraftPartList;
 
     @FindBy(xpath = "//span[text()='Отправленные']")
     private WebElement sentButton;
 
     @FindBy(xpath = "//div[@id='b-letters']/div/div[position()=8]//div[@class='b-datalist__item__subj']")
-    private WebElement subjectLabelSentPart;
+    private List<WebElement> subjectLabelSentPartList;
 
     @FindBy(xpath = "//div[@id='b-letters']/div/div[position()=8]//span[@class='b-datalist__item__subj__snippet']")
-    private WebElement bodyLabelSentPart;
+    private List<WebElement> bodyLabelSentPartList;
 
     @FindBy(xpath = "//div[@id='b-letters']/div/div[position()=8]//div[@class='b-datalist__item__addr']")
-    private WebElement addressLabelSentPart;
+    private List<WebElement> addressLabelSentPartList;
 
     @FindBy(xpath = "//div[@id='b-letters']/div/div[position()=8]//div[@class='b-datalist__body']/div")
     private List<WebElement> sentMessageList;
@@ -165,6 +164,7 @@ public class MainPage {
         bodyField.sendKeys(body);
         driver.switchTo().defaultContent();
         logger.info("Enter body text in field.");
+        wait.until(ExpectedConditions.elementToBeClickable(saveMessageButton));
         saveMessageButton.click();
         logger.info("Click 'Сохранить' button.");
         linkToDraftInWriteProcess.click();
@@ -172,23 +172,35 @@ public class MainPage {
     }
 
     public void clickDraftButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(draftButton));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='Перейти во Входящие']")));
         draftButton.click();
         logger.info("Click 'Черновик' button.");
-
     }
 
     public boolean isDraftMessage(String address, String subject, String body) {
         logger.info("Check message in draft part.");
-//        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Удалить']")));
-        return !draftMessageList.isEmpty() && bodyLabelDraftPart.getText().contains(body)
-                && subjectLabelDraftPart.getText().replace(bodyLabelDraftPart.getText(), "").equals(subject)
-                && addressLabelDraftPart.getText().equals(address);
+        if (!draftMessageList.isEmpty()) {
+            for (int i = 0; i < addressLabelDraftPartList.size(); i++) {
+                if (addressLabelDraftPartList.get(i).getText().equals(address)
+                        && bodyLabelDraftPartList.get(i).getText().contains(body)
+                        && subjectLabelDraftPartList.get(i).getText()
+                        .replace(bodyLabelDraftPartList.get(i).getText(), "").equals(subject))
+                    return true;
+            }
+        }
+        return false;
     }
 
-    public void sendDraftMessage() {
-        draftMessageList.get(0).click();
-
+    public void sendDraftMessage(String address, String subject, String body) {
+        if (!draftMessageList.isEmpty()) {
+            for (int i = 0; i < addressLabelDraftPartList.size(); i++) {
+                if (addressLabelDraftPartList.get(i).getText().equals(address)
+                        && bodyLabelDraftPartList.get(i).getText().contains(body)
+                        && subjectLabelDraftPartList.get(i).getText()
+                        .replace(bodyLabelDraftPartList.get(i).getText(), "").equals(subject))
+                    draftMessageList.get(i).click();
+            }
+        }
         logger.info("Click last draft message.");
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='Отправить']")));
         sendMessageButton.click();
@@ -203,8 +215,13 @@ public class MainPage {
 
     public boolean isSentMessage(String address, String subject, String body) {
         logger.info("Check message in sent part.");
-        return bodyLabelSentPart.getText().contains(body)
-                && subjectLabelSentPart.getText().replace(bodyLabelSentPart.getText(), "").equals(subject)
-                && addressLabelSentPart.getText().equals(address);
+        for (int i = 0; i < addressLabelSentPartList.size(); i++) {
+            if (addressLabelSentPartList.get(i).getText().equals(address)
+                    && bodyLabelSentPartList.get(i).getText().contains(body)
+                    && subjectLabelSentPartList.get(i).getText()
+                    .replace(bodyLabelSentPartList.get(i).getText(), "").equals(subject))
+                return true;
+        }
+        return false;
     }
 }
